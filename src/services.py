@@ -8,6 +8,9 @@ from utils import get_date_range, find_project_root
 
 
 def get_the_best_cashback_categories(transactions: pd.DataFrame, date: Optional[datetime] = None) -> None:
+    """
+    Подсчитывает категории с самым высоким возможным кэшбеком
+    """
 
     if date is None:
         first_day, last_day = get_date_range(datetime.today())
@@ -42,6 +45,9 @@ def get_the_best_cashback_categories(transactions: pd.DataFrame, date: Optional[
 
 
 def investment_bank(date: datetime, transactions: pd.DataFrame, limit: int) -> None:
+    """
+    Подсчитывает возможные сбережения при использовании округления в инвесткопилку
+    """
 
     if limit not in [10, 50, 100]:
         raise ValueError("Лимит должен быть 10, 50 или 100")
@@ -63,6 +69,9 @@ def investment_bank(date: datetime, transactions: pd.DataFrame, limit: int) -> N
 
 
 def simple_finder(transactions: pd.DataFrame, search_string: str) -> None:
+    """
+    Ищет транзакции по искомому слову в описании
+    """
 
     mask = transactions["Описание"].str.contains(search_string, case=False, na=False, regex=False)
 
@@ -77,6 +86,9 @@ def simple_finder(transactions: pd.DataFrame, search_string: str) -> None:
 
 
 def mobile_phone_finder(transactions: pd.DataFrame) -> None:
+    """
+    Ищет транзакции с номером телефона в описании
+    """
 
     phone_pattern = r"\+7[\s\-]?\(?\d{3}\)?[\s\-]?\d{3}[\s\-]?\d{2}[\s\-]?\d{2}"
 
@@ -93,6 +105,9 @@ def mobile_phone_finder(transactions: pd.DataFrame) -> None:
 
 
 def individual_transaction_finder(transactions: pd.DataFrame) -> None:
+    """
+    Ищет транзакции с фамилией и инициалом имени в описании
+    """
 
     name_pattern = r"\b[А-ЯЁ][а-яё]+\s+[А-ЯЁ]\."
 
