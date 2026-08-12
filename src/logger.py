@@ -1,5 +1,6 @@
 import logging
-from utils import find_project_root
+
+from src.utils import find_project_root
 
 # noinspection argument-list
 

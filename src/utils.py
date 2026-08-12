@@ -89,7 +89,10 @@ def get_date_range(
     return start_date, end_date
 
 
-def data_with_normalized_spacebars():
+def data_with_normalized_spacebars() -> pd.DataFrame:
+    """
+    Нормализует пробелы в датафрейме
+    """
 
     transactions = pd.read_excel(f"{find_project_root()}/data/MyOperations.xlsx")
 

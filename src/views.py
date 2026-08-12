@@ -6,8 +6,8 @@ import pandas as pd
 import requests
 from dotenv import load_dotenv
 
-from logger import logger
-from utils import find_project_root, get_date_range, user_settings
+from src.logger import logger
+from src.utils import find_project_root, get_date_range, user_settings
 
 load_dotenv()
 

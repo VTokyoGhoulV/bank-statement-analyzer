@@ -3,13 +3,14 @@ from functools import wraps
 
 import pandas as pd
 
-from logger import logger
+from src.logger import logger
+from src.utils import find_project_root
 
 
 def report_to_file(filename=None):  # type: ignore
     """
     Декоратор для функций отчётов, возвращающих DataFrame.
-    Сохраняет результат в CSV-файл.
+    Сохраняет результат в JSON-файл.
     """
 
     def decorator(func):  # type: ignore
@@ -32,9 +33,9 @@ def report_to_file(filename=None):  # type: ignore
 
             if filename is None:
                 timestamp = datetime.now().strftime("%Y%m%d")
-                out_filename = f"../data/reports/report_{func.__name__}_{timestamp}.json"
+                out_filename = f"{find_project_root()}/data/reports/report_{func.__name__}_{timestamp}.json"
             else:
-                out_filename = filename
+                out_filename = f"{find_project_root()}/data/reports/{filename}.json"
 
             # Теперь to_json не будет преобразовывать даты в timestamps
             result.to_json(out_filename, orient="records", force_ascii=False, indent=2)
