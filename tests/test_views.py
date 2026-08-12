@@ -7,7 +7,7 @@ import pandas as pd
 import pytest
 import requests
 
-import views
+from src import views
 
 
 class FakeResponse:
@@ -205,7 +205,8 @@ def test_stocks_return_empty_without_key(tmp_path, monkeypatch) -> None:
 
 
 def test_page_json_builders(tmp_path, monkeypatch, transactions_df) -> None:
-    (tmp_path / "data").mkdir()
+    views_dir = tmp_path / "data" / "views"
+    views_dir.mkdir(parents=True)
     monkeypatch.setattr(views, "find_project_root", lambda: tmp_path)
     monkeypatch.setattr(views, "greetings", lambda: "Добрый день!")
     monkeypatch.setattr(views, "get_currency_rates", lambda: [])
@@ -213,13 +214,13 @@ def test_page_json_builders(tmp_path, monkeypatch, transactions_df) -> None:
 
     date = datetime(2026, 6, 30)
     views.page_main_json(date, transactions_df)
-    main = json.loads((tmp_path / "data" / "main_page.json").read_text(encoding="utf-8"))
+    main = json.loads((views_dir / "main_page.json").read_text(encoding="utf-8"))
     assert main["greetings"] == "Добрый день!"
     assert len(main["cards"]) == 2
     assert len(main["top_transactions"]) == 5
 
     views.page_events_json(date, transactions_df, "M")
-    events = json.loads((tmp_path / "data" / "events_page.json").read_text(encoding="utf-8"))
+    events = json.loads((views_dir / "events_page.json").read_text(encoding="utf-8"))
     assert events["expenses"]["total_amount"] == 453
     assert events["income"]["total_amount"] == 1025
     assert events["currency_rates"] == []

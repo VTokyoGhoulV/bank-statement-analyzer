@@ -3,16 +3,16 @@ from __future__ import annotations
 import json
 from datetime import datetime
 
-import pandas as pd
 import pytest
 
-import services
+from src import services
 
 
 def _data_dir(tmp_path, monkeypatch):
-    (tmp_path / "data").mkdir()
+    data_dir = tmp_path / "data" / "services"
+    data_dir.mkdir(parents=True)
     monkeypatch.setattr(services, "find_project_root", lambda: tmp_path)
-    return tmp_path / "data"
+    return data_dir
 
 
 def test_best_cashback_categories_filters_and_sorts(tmp_path, monkeypatch, transactions_df) -> None:

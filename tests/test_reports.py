@@ -4,14 +4,12 @@ from datetime import datetime
 
 import pandas as pd
 
-from src import reports
+from src import decorators, reports
 
 
 def _report_workspace(tmp_path, monkeypatch) -> None:
-    workdir = tmp_path / "project"
-    workdir.mkdir()
     (tmp_path / "data" / "reports").mkdir(parents=True)
-    monkeypatch.chdir(workdir)
+    monkeypatch.setattr(decorators, "find_project_root", lambda: tmp_path)
 
 
 def _report_df() -> pd.DataFrame:
