@@ -2,15 +2,16 @@ from datetime import datetime
 
 import pandas as pd
 
-from services import mobile_phone_finder, individual_transaction_finder
 from src.reports import spending_by_category, spending_by_weekday, spending_by_workday
 from src.services import (
     get_the_best_cashback_categories,
+    individual_transaction_finder,
     investment_bank,
+    mobile_phone_finder,
     simple_finder,
 )
+from src.utils import data_with_normalized_spacebars
 from src.views import page_events_json, page_main_json
-from utils import data_with_normalized_spacebars
 
 
 def pages(date: datetime, transactions: pd.DataFrame, range_type: str = "M") -> None:
@@ -31,9 +32,9 @@ def services(date: datetime, transactions: pd.DataFrame, limit: int, search_stri
 
     get_the_best_cashback_categories(transactions, date)
     investment_bank(date, transactions, limit)
-    simple_finder(data, search_string)
-    mobile_phone_finder(data)
-    individual_transaction_finder(data)
+    simple_finder(transactions, search_string)
+    mobile_phone_finder(transactions)
+    individual_transaction_finder(transactions)
 
 
 def reports(transactions: pd.DataFrame, category: str) -> None:
