@@ -105,12 +105,10 @@ def get_currency_rates() -> list:
     user_currencies = user_settings.get("user_currencies", [])  # глобальная переменная
 
     cached_data = None
-    # Чтение кэша, если файл существует
     if os.path.exists(cache_path):
         with open(cache_path, "r", encoding="utf-8") as file:
             cached_data = json.load(file)
 
-    # Проверка свежести и наличия всех нужных валют
     if (
         cached_data is not None
         and cached_data.get("date") == today
@@ -119,7 +117,6 @@ def get_currency_rates() -> list:
         logger.info("Берем из кэша")
         return [c for c in cached_data["currency_rates"] if c["currency"] in user_currencies]
 
-    # Иначе загружаем из API
     api_key = os.getenv("CURRENCY_API")
     if not api_key or not user_currencies:
         logger.error("Нет API ключа для валют или нет настроек пользователя")
@@ -142,7 +139,6 @@ def get_currency_rates() -> list:
         # Объединяем: новые перезаписывают старые, старые валюты, которых нет в запросе, остаются
         merged_rates = {**old_rates, **new_rates}
 
-        # Формируем данные для сохранения
         actual_rates = {
             "currency_rates": [{"currency": cur, "rate": rate} for cur, rate in merged_rates.items()],
             "date": today,
@@ -167,13 +163,11 @@ def get_stocks_info() -> list:
     today = datetime.now().strftime("%d.%m.%Y")
     user_stocks = user_settings.get("user_stocks", [])  # глобальная переменная
 
-    # Чтение кэша, если файл существует
     cached_data = None
     if os.path.exists(cache_path):
         with open(cache_path, "r", encoding="utf-8") as file:
             cached_data = json.load(file)
 
-    # Проверка свежести и наличия всех нужных акций
     if (
         cached_data
         and cached_data.get("date") == today
@@ -182,7 +176,6 @@ def get_stocks_info() -> list:
         logger.info("Берем из кэша")
         return [item for item in cached_data["stocks_rates"] if item["stock"] in user_stocks]
 
-    # Иначе загружаем из API
     api_key = os.getenv("STOCK_API")
     if not api_key or not user_stocks:
         logger.error("Нет API ключа для акций или нет настроек пользователя")
@@ -196,7 +189,6 @@ def get_stocks_info() -> list:
             for item in cached_data.get("stocks_rates", [])
         }
 
-    # Получаем новые данные для запрошенных акций
     new_stocks = {}
     for stock in user_stocks:
         url = f"https://api.twelvedata.com/eod?symbol={stock}&apikey={api_key}"
@@ -215,16 +207,13 @@ def get_stocks_info() -> list:
     for stock, data in new_stocks.items():
         merged[stock] = data  # новые заменяют или добавляются
 
-    # Преобразуем обратно в список
     merged_stocks_rates = list(merged.values())
 
-    # Формируем данные для кэша
     actual_rates = {
         "stocks_rates": merged_stocks_rates,
         "date": today,
     }
 
-    # Сохраняем в кэш
     with open(cache_path, "w", encoding="utf-8") as file:
         json.dump(actual_rates, file, ensure_ascii=False, indent=4)
 

@@ -1,7 +1,7 @@
 [project]
-name = "Project1"
+name = "bank-statement-analyzer"
 version = "0.1.0"
-description = "Учебный проект"
+description = "Excel bank statement analysis with pandas, JSON reports and market data APIs"
 authors = [
     {name = "-TokyoGhoul-",email = "0hellnomad0@gmail.com"}
 ]
